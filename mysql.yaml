@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  db-mysql:
+    platform: linux/x86_64
+    image: mysql:5.7.40
+    restart: always
+    environment:
+      # - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=mybackend
+      # - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
+      - MYSQL_ROOT_PASSWORD=root
+      # - MYSQL_USER=root
+    ports:
+      - "3307:3306"
