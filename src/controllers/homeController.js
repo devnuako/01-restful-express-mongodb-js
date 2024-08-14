@@ -1,23 +1,28 @@
 const connection = require('../config/database');
+// const { getAllUsers, getUserById, updateUserById } = require('../services/CRUDService');
+const { getAllUsers, getUserById,
+    updateUserById, deleteUserById } = require('../services/CRUDService');
 
-
-const getHomepage = (req, res) => {
+const getHomepage = async (req, res) => {
     //process data
     //call model
     //res.send('Hello World vs Express! & nodemon')
-    let users = [];
+    //return res.render('home.ejs')
+    let results = await getAllUsers();
+    return res.render('home.ejs', { listUsers: results }) // x <- y
+}
 
-    connection.query(
-        'select * from Users u',
-        function (err, results, fields) {
-            users = results;
-            console.log(">>>results home page= ", results); // results contains rows returned by server
+const postUpdateUser = async (req, res) => {
 
-            // console.log(">> check users: ", users)
-            res.send(JSON.stringify(users))
-        }
-    );
+    let email = req.body.email;
+    let name = req.body.myname;
+    let city = req.body.city;
+    let userId = req.body.userId;
 
+    await updateUserById(email, city, name, userId);
+
+    // res.send(' Updated user succeed !')
+    res.redirect('/');
 }
 
 const getABC = (req, res) => {
@@ -28,6 +33,59 @@ const getXYZ = (req, res) => {
     res.render('sample.ejs')
 }
 
+const postCreateUser = async (req, res) => {
+    let email = req.body.email;
+    let name = req.body.myname;
+    let city = req.body.city;
+
+    console.log(">>> email = ", email, ' name = ', name, ' city = ', city)
+
+    // let {email, name, city} = req.body;
+    let [results, fields] = await connection.query(
+        `INSERT INTO Users (email, name, city) VALUES (?, ?, ?) `, [email, name, city]
+    );
+    res.send(' Created user succeed !')
+}
+
+const getCreatePage = (req, res) => {
+    res.render('create.ejs')
+    // let results = await getAllUsers();
+    // return res.render('home.ejs', { listUsers: results }) // x <- y
+}
+
+const getUpdatePage = async (req, res) => {
+    const userId = req.params.id;
+
+    // res.render('edit.ejs')
+    let user = await getUserById(userId);
+    res.render('edit.ejs', { userEdit: user }); //x <- y
+
+}
+
+const postDeleteUser = async (req, res) => {
+    const userId = req.params.id;
+    let user = await getUserById(userId);
+
+    res.render('delete.ejs', { userEdit: user })
+}
+
+// const postHandleRemoveUser = (req, res) => {
+//     res.send('ok deleted')
+// }
+
+const postHandleRemoveUser = async (req, res) => {
+    const id = req.body.userId;
+
+    await deleteUserById(id);
+
+    res.redirect('/');
+}
+
 module.exports = {
-    getHomepage, getABC, getXYZ
+    getHomepage, getABC, getXYZ,
+    postCreateUser, getCreatePage, getUpdatePage,
+    postUpdateUser, 
+    postDeleteUser, postHandleRemoveUser
+
+
 }
