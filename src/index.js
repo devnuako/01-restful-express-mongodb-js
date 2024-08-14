@@ -4,7 +4,9 @@ const configViewEngine = require('./config/viewEngine');
 const webRoutes = require('./routes/web');
 
 const connection = require('./config/database');
+// const mongoose = require('mongoose');
 
+// const Kitten = require('./models/user');
 
 const app = express();// app express
 const port = process.env.PORT || 8888; //port => hardcode . uat .prod
@@ -31,6 +33,29 @@ app.use('/', webRoutes);
 //     }
 // );
 
-app.listen(port, hostname, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+// connection();
+
+// app.listen(port, hostname, () => {
+//     console.log(`Example app listening on port ${port}`)
+// })
+
+// const kittySchema = new mongoose.Schema({
+//     name: String
+// });
+// const Kitten = mongoose.model('Kitten', kittySchema);
+// const cat = new Kitten({ name: 'my document 01' });
+
+// const cat = new Kitten({ name: 'My docs 01 model' });
+// cat.save();
+
+
+(async () => {
+    try {
+        await connection();
+        app.listen(port, hostname, () => {
+            console.log(`Backend zero app listening on port ${port}`)
+        })
+    } catch (error) {
+        console.log(">>> Error connect to DB: ", error)
+    }
+})()
