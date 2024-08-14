@@ -12,11 +12,13 @@ const hostname = process.env.HOST_NAME;
 //config template engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs')
+//config static files: image/css/js
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 //khai báo route
 app.get('/', (req, res) => {
-    res.send('Hello World with Express')
+    res.send('Hello World with Express with nodemon update')
 })
 
 app.get('/abc', (req, res) => {
