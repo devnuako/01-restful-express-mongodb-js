@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express'); //commonjs
 const configViewEngine = require('./config/viewEngine');
 const webRoutes = require('./routes/web');
+const apiRoutes = require('./routes/api');
+
 
 const connection = require('./config/database');
 // const mongoose = require('mongoose');
@@ -22,6 +24,7 @@ configViewEngine(app);
 
 //khai báo route
 app.use('/', webRoutes);
+app.use('/v1/api/', apiRoutes);
 
 
 // simple query
